@@ -1,0 +1,4 @@
+# Projeto utiliza apenas bibliotecas padrão do Python
+# Não há dependências externas necessárias
+
+# Python 3.6 ou superior é requerido
