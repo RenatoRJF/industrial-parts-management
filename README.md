@@ -36,12 +36,14 @@ Peças que não atendem a todos os critérios são automaticamente reprovadas co
 ### Estrutura do Projeto
 
 ```
-gestao-pecas-industrial/
+industrial-parts-management/
 │
-├── main.py                 # Código principal do sistema
+├── part.py                 # Classe Part (peça)
+├── box.py                  # Classe Box (caixa)
+├── management_system.py    # Classe ManagementSystem (sistema de gestão)
+├── main.py                 # Programa principal com menu
 ├── README.md              # Este arquivo
-├── requirements.txt       # Dependências do projeto (vazio - Python puro)
-└── examples.md            # Exemplos de uso
+└── requirements.txt       # Dependências (vazio - Python puro)
 ```
 
 ### Como Executar o Programa
@@ -61,15 +63,14 @@ python3 --version
 
 #### Passo a Passo para Executar
 
-1. **Clone ou baixe o projeto**
+1. **Clone o projeto**
    ```bash
-   cd gestao-pecas-industrial
+   git clone https://github.com/RenatoRJF/industrial-parts-management.git
+   cd industrial-parts-management
    ```
 
 2. **Execute o programa**
    ```bash
-   python main.py
-   # ou, dependendo da configuração do seu sistema:
    python3 main.py
    ```
 
@@ -108,41 +109,7 @@ Digite o comprimento (cm): 25
   Motivos: Peso fora do padrão: 110.0g (esperado: 95g-105g); Cor inválida: vermelho (esperado: azul ou verde); Comprimento fora do padrão: 25.0cm (esperado: 10cm-20cm)
 ```
 
-#### Exemplo 3: Listar peças aprovadas
-
-```
-Escolha uma opção: 2
---- LISTAGEM DE PEÇAS ---
-
-1. Listar peças aprovadas
-2. Listar peças reprovadas
-3. Listar ambas
-
-Escolha uma opção: 1
-
-================================================================================
-PEÇAS APROVADAS (5 total)
-================================================================================
-ID: 1 | Peso: 100.0g | Cor: azul | Comprimento: 15.0cm | Status: APROVADA
-ID: 3 | Peso: 98.0g | Cor: verde | Comprimento: 12.0cm | Status: APROVADA
-ID: 4 | Peso: 102.0g | Cor: azul | Comprimento: 18.0cm | Status: APROVADA
-ID: 6 | Peso: 95.0g | Cor: verde | Comprimento: 10.0cm | Status: APROVADA
-ID: 7 | Peso: 105.0g | Cor: azul | Comprimento: 20.0cm | Status: APROVADA
-```
-
-#### Exemplo 4: Caixa fechada automaticamente
-
-```
-Após cadastrar 10 peças aprovadas:
-
-✓ Peça #10 APROVADA e armazenada com sucesso!
-  → Caixa #1 FECHADA (capacidade máxima atingida)
-
-✓ Peça #11 APROVADA e armazenada com sucesso!
-  → Nova caixa #2 criada
-```
-
-#### Exemplo 5: Relatório final
+#### Exemplo 3: Relatório final
 
 ```
 Escolha uma opção: 5
@@ -167,7 +134,6 @@ TOTAL DE PEÇAS PROCESSADAS: 15
 📦 CAIXAS UTILIZADAS: 2
   - Caixas fechadas: 1
   - Caixas abertas: 1
-    Caixa #2 - ABERTA - Peças: 0/10
 
   Eficiência de armazenamento: 50.00%
 
@@ -178,26 +144,26 @@ TOTAL DE PEÇAS PROCESSADAS: 15
 
 #### Classes Principais
 
-**1. Classe `Peca`**
+**1. Classe `Part`** (part.py)
 - Representa uma peça produzida
-- Atributos: id, peso, cor, comprimento, aprovada, motivos_reprovacao
-- Método `_validar_qualidade()`: Valida automaticamente os critérios de qualidade
+- Atributos: id, weight, color, length, approved, rejection_reasons
+- Método `_validate_quality()`: Valida automaticamente os critérios de qualidade
 
-**2. Classe `Caixa`**
+**2. Classe `Box`** (box.py)
 - Representa uma caixa de armazenamento
 - Capacidade máxima: 10 peças
-- Método `adicionar_peca()`: Adiciona peça e fecha caixa se atingir capacidade
-- Método `fechar()`: Marca a caixa como fechada
+- Método `add_part()`: Adiciona peça e fecha caixa se atingir capacidade
+- Método `close()`: Marca a caixa como fechada
 
-**3. Classe `SistemaGestao`**
+**3. Classe `ManagementSystem`** (management_system.py)
 - Sistema principal que gerencia peças e caixas
 - Métodos principais:
-  - `cadastrar_peca()`: Cadastra e valida nova peça
-  - `listar_pecas_aprovadas()`: Lista peças aprovadas
-  - `listar_pecas_reprovadas()`: Lista peças reprovadas
-  - `remover_peca()`: Remove peça por ID
-  - `listar_caixas()`: Lista caixas fechadas
-  - `gerar_relatorio()`: Gera relatório consolidado
+  - `register_part()`: Cadastra e valida nova peça
+  - `list_approved_parts()`: Lista peças aprovadas
+  - `list_rejected_parts()`: Lista peças reprovadas
+  - `remove_part()`: Remove peça por ID
+  - `list_boxes()`: Lista caixas fechadas
+  - `generate_report()`: Gera relatório consolidado
 
 ### Técnicas e Boas Práticas Aplicadas
 
@@ -206,36 +172,31 @@ TOTAL DE PEÇAS PROCESSADAS: 15
    - Separação de responsabilidades entre classes
    - Métodos privados (prefixo `_`) para operações internas
 
-2. **Validação de Dados**
+2. **Separação de Módulos**
+   - Cada classe em seu próprio arquivo
+   - Importações claras e organizadas
+   - Facilita manutenção e testes
+
+3. **Validação de Dados**
    - Validação automática de qualidade das peças
    - Tratamento de entradas do usuário
    - Validação de intervalos numéricos
 
-3. **Tratamento de Erros**
+4. **Tratamento de Erros**
    - Try-except para capturar erros
    - Validação de entrada numérica
    - Mensagens de erro claras e descritivas
 
-4. **Interface Amigável**
+5. **Interface Amigável**
    - Menu interativo claro e organizado
    - Feedback visual com símbolos (✓, ✗, →, 📦)
    - Formatação consistente com separadores visuais
 
-5. **Código Limpo**
+6. **Código Limpo**
    - Docstrings em todas as classes e funções
-   - Nomes descritivos de variáveis e métodos
-   - Comentários explicativos quando necessário
+   - Nomes descritivos de variáveis e métodos em inglês
+   - Interface do usuário em português
    - Formatação consistente
-
-6. **Estruturas de Dados**
-   - Listas para armazenamento dinâmico
-   - Dicionários para contagem de motivos de reprovação
-   - Uso eficiente de estruturas Python
-
-7. **Modularização**
-   - Funções específicas para cada operação
-   - Reutilização de código
-   - Facilidade de manutenção e expansão
 
 ### Benefícios da Solução
 
@@ -244,66 +205,17 @@ TOTAL DE PEÇAS PROCESSADAS: 15
 - **Rastreabilidade**: Cada peça tem um ID único
 - **Relatórios Detalhados**: Estatísticas completas sobre produção e qualidade
 - **Eficiência**: Armazenamento automático em caixas
-- **Escalabilidade**: Fácil de expandir com novas funcionalidades
-
-### Possíveis Expansões Futuras
-
-Este protótipo pode ser expandido para um cenário industrial real com:
-
-1. **Integração com Sensores IoT**
-   - Leitura automática de peso, cor e comprimento via sensores
-   - Conexão com balanças digitais
-   - Câmeras para reconhecimento de cor
-   - Sensores laser para medição de comprimento
-
-2. **Banco de Dados**
-   - Persistência de dados em PostgreSQL ou MongoDB
-   - Histórico completo de produção
-   - Consultas avançadas e análises
-
-3. **Interface Web**
-   - Dashboard com gráficos em tempo real
-   - Interface responsiva usando Flask ou Django
-   - Visualização de métricas de produção
-
-4. **Inteligência Artificial**
-   - Machine Learning para prever falhas de qualidade
-   - Análise preditiva de tendências de produção
-   - Otimização automática de parâmetros
-
-5. **Integração Industrial**
-   - Conexão com sistemas MES (Manufacturing Execution System)
-   - Comunicação com CLPs (Controladores Lógicos Programáveis)
-   - Protocolo OPC UA para comunicação industrial
-
-6. **Relatórios Avançados**
-   - Exportação para PDF e Excel
-   - Gráficos de tendências
-   - Análise de Pareto de defeitos
-
-7. **Notificações**
-   - Alertas automáticos por email ou SMS
-   - Notificações quando caixas são fechadas
-   - Avisos de taxa alta de reprovação
-
-8. **Múltiplos Usuários**
-   - Sistema de autenticação
-   - Controle de permissões por função
-   - Auditoria de operações
+- **Código Modular**: Fácil de manter e expandir
 
 ### Tecnologias Utilizadas
 
 - **Linguagem**: Python 3.x
 - **Paradigma**: Programação Orientada a Objetos
-- **Bibliotecas**: Apenas bibliotecas padrão do Python (sem dependências externas)
+- **Dependências**: Nenhuma (usa apenas bibliotecas padrão do Python)
 
 ### Autor
 
 Projeto desenvolvido para a disciplina de **Algoritmos e Lógica de Programação** - UNIFECAF
-
-### Licença
-
-Este projeto é de uso educacional.
 
 ---
 
